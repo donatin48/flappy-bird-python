@@ -44,6 +44,7 @@ n5 = pygame.image.load("flappy-bird-assets/sprites/5.png")
 n6 = pygame.image.load("flappy-bird-assets/sprites/6.png")
 n7 = pygame.image.load("flappy-bird-assets/sprites/7.png")
 n8 = pygame.image.load("flappy-bird-assets/sprites/8.png")
+n9 = pygame.image.load("flappy-bird-assets/sprites/9.png")
 
 # menu
 menu = pygame.image.load("flappy-bird-assets/sprites/message.png")

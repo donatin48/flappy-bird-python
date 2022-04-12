@@ -16,7 +16,6 @@ clock = pygame.time.Clock()
 
 
 
-n9 = pygame.image.load("flappy-bird-assets/sprites/9.png")
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self):
