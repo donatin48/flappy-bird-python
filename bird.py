@@ -28,15 +28,11 @@ class Bird(pygame.sprite.Sprite):
 
         self.rect = self.images[0].get_rect()
         self.rect.x = 5
+        self.mask = pygame.mask.from_surface(self.image)
         self.velocity = 0
 
     def update(self):
         self.rect.y += self.velocity
-        collisions = pygame.sprite.spritecollide(bird,tuyaux,True)
-        if collisions or self.rect.y > hauteur - 125 or self.rect.y < 0:
-            mort.play()
-            pygame.time.delay(1000)
-            pygame.quit()
 
 
 class Tuyau(pygame.sprite.Sprite):
@@ -54,9 +50,17 @@ class Tuyau(pygame.sprite.Sprite):
         self.rect.x = largeur - self.rect.width
         self.rect.x = largeur 
         self.rect.y = self.y
+        self.mask = pygame.mask.from_surface(self.image)
     
     def update(self):
         self.rect.x -= 2
+        collisions = pygame.sprite.collide_mask(bird, self)
+        if collisions or bird.rect.y > hauteur - 125 or bird.rect.y < 0:
+            print(collisions)
+            mort.play()
+            pygame.time.delay(1000)
+            pygame.quit()
+
         if self.rect.x < -self.rect.width:
             global score
             score += 0.5
@@ -157,7 +161,7 @@ while not finished :
 
     bird.update()
     screen.blit(bird.image,bird.rect)
-    
+
     tuyaux.update()
     tuyaux.draw(screen)
     image = transform_number(score)
