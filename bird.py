@@ -11,10 +11,7 @@ screen = pygame.display.set_mode((largeur,hauteur))
 os.chdir(__file__[:-8])
 from variables import *
 pygame.display.set_caption("Flappy Bird")
-# pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
-
-
 
 
 class Bird(pygame.sprite.Sprite):
@@ -28,11 +25,11 @@ class Bird(pygame.sprite.Sprite):
 
         self.rect = self.images[0].get_rect()
         self.rect.x = 5
-        self.mask = pygame.mask.from_surface(self.image)
-        self.velocity = 0
+        self.mask = pygame.mask.from_surface(self.image) # collisions avec des polygones
+        self.velocity = 0 # vélocité de l'oiseau
 
     def update(self):
-        self.rect.y += self.velocity
+        self.rect.y += self.velocity # ajout de la vélocité
 
 
 class Tuyau(pygame.sprite.Sprite):
@@ -40,25 +37,25 @@ class Tuyau(pygame.sprite.Sprite):
         super().__init__()
         if direction == "haut":
             self.image = pipe_haut
-            # self.y = -random.randint(0,200)
-            self.y = -285 + y
+            self.y = -285 + y 
         if direction == "bas":
             self.image = pipe_bas
             self.y = 130 + y 
 
         self.rect = self.image.get_rect()
-        self.rect.x = largeur - self.rect.width
         self.rect.x = largeur 
         self.rect.y = self.y
         self.mask = pygame.mask.from_surface(self.image)
     
     def update(self):
         self.rect.x -= 2
-        collisions = pygame.sprite.collide_mask(bird, self)
-        if collisions or bird.rect.y > hauteur - 125 or bird.rect.y < 0:
+        collisions = pygame.sprite.collide_mask(bird, self) # collisions avec des polygones
+        if collisions or bird.rect.y > hauteur - 125 or bird.rect.y < 0: # collision avec un tuyau 
             print(collisions)
             mort.play()
             pygame.time.delay(1000)
+            global finished
+            finished = True
             pygame.quit()
 
         if self.rect.x < -self.rect.width:
@@ -123,17 +120,17 @@ while not finished :
     ##### EVENTS #####
     for event in pygame.event.get():
 
-        if event.type == MOUSEBUTTONDOWN :
+        if event.type == MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN: # système de vélocité avec les sauts
             saut.play()
             if on_menu:
                 on_menu = False
                 bird.velocity = -8
-            if bird.velocity -9 > -9:
-                bird.velocity -= 9
+            if bird.velocity -10 > -10:
+                bird.velocity -= 10
             else:
-                bird.velocity = -6
+                bird.velocity = -7 
 
-        if event.type == NEW_PIPE:
+        if event.type == NEW_PIPE: # ajout des tuyaux
             if not on_menu :
                 y = random.randint(0,200)
                 tuyaux.add(Tuyau("haut",y))
@@ -146,29 +143,29 @@ while not finished :
     screen.fill(BLACK)
 
     screen.blit(background,(0,0))
-   
 
-    if bird.velocity <= 2 and not on_menu: # pour ne pas tomber trop vite
+    if bird.velocity <= 2.5 and not on_menu: # pour ne pas tomber trop vite
         bird.velocity += 0.5
 
-
-    if bird.velocity <= -1:
-        bird.image = bird_haut
-    elif bird.velocity >= 1:
+    if bird.velocity <= -1.5: # système d'animation de l'oiseau 
         bird.image = bird_bas
+    elif bird.velocity >= 1.5:
+        bird.image = bird_haut
     else:
         bird.image = bird_millieu
 
     bird.update()
     screen.blit(bird.image,bird.rect)
-
-    tuyaux.update()
+ 
     tuyaux.draw(screen)
     image = transform_number(score)
     screen.blit(image,(largeur//2 - image.get_size()[0]//2 ,35)) # centre le score en haut 
-    screen.blit(base,(0,hauteur - base.get_height()))
-    if on_menu:
+    screen.blit(base,(base_x,hauteur - base.get_height()))
+    base_x -= 2 # on bouge la base de 2 pixels 
+    if base_x <= -24 : # on la replace au début 
+        base_x = 0
+    if on_menu: # si on est au début on affiche le menu 
         screen.blit(menu,(largeur//2 - menu.get_size()[0]//2,hauteur//2 - menu.get_size()[1]//2))
-
     pygame.display.flip()
+    tuyaux.update() # update après le flip pour bien voir la position de l'oiseau
 
