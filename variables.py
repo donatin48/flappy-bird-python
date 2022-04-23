@@ -18,7 +18,7 @@ YELLOW = (255,255,255)
 NEW_PIPE = pygame.USEREVENT + 0
 pygame.time.set_timer(NEW_PIPE,2000)
 
-
+# assets sur https://github.com/samuelcust/flappy-bird-assets
 # images
 base = pygame.image.load("flappy-bird-assets/sprites/base.png").convert()
 background = pygame.image.load("flappy-bird-assets/sprites/background-day.png").convert()
@@ -32,6 +32,9 @@ birds = [bird_bas,bird_millieu,bird_haut]
 # tuyaux
 pipe_bas = pygame.image.load("flappy-bird-assets/sprites/pipe-red.png").convert()
 pipe_haut = pygame.transform.flip(pipe_bas,True,True)
+
+# base
+base_x = 0
 
 # score
 score = 0
@@ -48,7 +51,6 @@ n9 = pygame.image.load("flappy-bird-assets/sprites/9.png")
 
 # menu
 menu = pygame.image.load("flappy-bird-assets/sprites/message.png")
-
 
 # sons
 
